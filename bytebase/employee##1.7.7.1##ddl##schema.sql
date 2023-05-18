@@ -2,5 +2,5 @@
 CREATE TABLE TEST_TABLE
 (
 	id BIGINT NOT NULL,
-	coursese VARCHAR(255)
+	course VARCHAR(300)
 )
