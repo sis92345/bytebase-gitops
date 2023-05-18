@@ -1,0 +1,5 @@
+CREATE TABLE TA_TEST
+(
+	id BIGINT NOT NULL,
+	course VARCHAR(300)
+)
