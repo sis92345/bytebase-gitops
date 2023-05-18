@@ -1,0 +1,6 @@
+-- 테이블 추가
+CREATE TABLE TEST_TABLE
+(
+	id BIGINT NOT NULL,
+	cour VARCHAR(255)
+)
