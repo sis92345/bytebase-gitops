@@ -1,0 +1,49 @@
+version: "3.8"
+
+#
+# BYTEBASE TEST Compose
+# 1. bytebase  : ByteBase 본체
+# 2. test-db-1 : DB 1 , 개발 DB 1번으로 가정
+# 3. test-db-2 : DB 2 , 개발 DB 2번으로 가정
+# 4. test-db-3 : DB 3 , 운영 DB로 가정
+networks:
+  bytebase-net:
+    driver: "bridge"
+
+# BytebaseSample
+services:
+  bytebase:
+    init: true
+    stdin_open: false
+    tty: false
+    platform: linux/amd64
+    restart: always
+    command: [ "--data", "/var/opt/bytebase", "--port", "5678" , "--external-url" , "http://127.0.0.1" , "--debug" ]
+    ports:
+      - "5678:5678"
+    volumes:
+      - /Users/anbyeonghyeon/Documents/data:/var/opt/bytebase
+    networks:
+      - default
+      - bytebase-net
+    image: bytebase/bytebase:2.0.0
+  test-db-1:
+    container_name: test-db-1
+    image: bytebase/sample-database:mysql-employee-small
+    ports:
+      - "3307:3306"
+  test-db-2:
+    container_name: test-db-2
+    image: bytebase/sample-database:mysql-employee-small
+    ports:
+      - "3308:3306"
+  nginx:
+    image: nginx
+    container_name: nginx
+    networks:
+      - default
+      - bytebase-net
+    volumes:
+      - "./default.conf:/etc/nginx/conf.d/default.conf"
+    ports:
+      - "80:80"
