@@ -1,0 +1,1 @@
+INSERT INTO TA_TEST ( id, course ) values ( 1, '국어' );
