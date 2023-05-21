@@ -24,7 +24,6 @@ services:
     volumes:
       - /Users/anbyeonghyeon/Documents/data:/var/opt/bytebase
     networks:
-      - default
       - bytebase-net
     image: bytebase/bytebase:2.0.0
   test-db-1:
@@ -37,6 +36,13 @@ services:
     image: bytebase/sample-database:mysql-employee-small
     ports:
       - "3308:3306"
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - "3309:3306"
+    environment:
+      MARIADB_ROOT_HOST: "%"
+      MARIADB_ROOT_PASSWORD: "test"
   nginx:
     image: nginx
     container_name: nginx
