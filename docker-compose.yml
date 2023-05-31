@@ -13,12 +13,14 @@ networks:
 # BytebaseSample
 services:
   bytebase:
+    depends_on:
+      - external
     init: true
     stdin_open: false
     tty: false
     platform: linux/amd64
     restart: always
-    command: [ "--data", "/var/opt/bytebase", "--port", "5678" , "--external-url" , "http://127.0.0.1" , "--debug" ]
+    command: [ "--data", "/var/opt/bytebase", "--port", "5678" , "--external-url" , "http://127.0.0.1" , "--pg" , "postgresql://bytebase:test@external:5432/bytebase" ]
     ports:
       - "5678:5678"
     volumes:
@@ -43,6 +45,24 @@ services:
     environment:
       MARIADB_ROOT_HOST: "%"
       MARIADB_ROOT_PASSWORD: "test"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - /Users/anbyeonghyeon/Documents/data/redis:/data
+  external:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: test
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - /Users/anbyeonghyeon/Documents/external:/var/lib/postgresql/data/pgdata
+      - ./init:/docker-entrypoint-initdb.d/
+    networks:
+      - bytebase-net
   nginx:
     image: nginx
     container_name: nginx
